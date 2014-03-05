@@ -60,7 +60,6 @@ if( is_array( $rows ) && count( $rows ) > 0 )
                                 break;
                         }
                     }
-                }
                 else
                 {
                     eZDebug::writeError( array( $node, " is not instanceof eZContentObjectTreeNode" ), __METHOD__ );
