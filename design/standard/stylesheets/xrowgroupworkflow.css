@@ -1,0 +1,49 @@
+#xrowGroupWorkflowOverview ul, #xrowGroupWorkflowOverview ul ul {
+    list-style-type: none;
+    margin: 0.75em 0 1em 0;
+}
+.xrowGroupWorkflowGroupName, .xrowGroupWorkflowDatePicker, .xrowGroupWorkflowStateBlock {
+    float: left;
+    margin-right: 15px;
+}
+.xrowGroupWorkflowDatePicker label, .xrowGroupWorkflowStateBlock label {
+    float: left;
+}
+.xrowGroupWorkflowDate {
+    width: 70px;
+    float: left;
+    margin-right: 5px;
+    padding: 1px;
+}
+
+.editFieldButtonCopy {
+    margin-right: 10px;
+}
+.xrowGroupWorkflowBrowseButtonBlock {
+    clear: both;
+}
+.xrowGroupWorkflowBrowseButton {
+    background: -moz-linear-gradient(center top , #5D7DB1, #445C89) repeat scroll 0 0 padding-box #516E9E;
+    border: 1px solid #CFD1D3;
+    border-radius: 3px;
+    color: #FFFFFF;
+    overflow: visible;
+    padding: 0.26em 0.7em;
+    width: 80px;
+    text-decoration: none;
+    cursor: pointer;
+}
+.xrowGroupWorkflowNewGroup, #xrowGroupWorkflowOverview {
+    padding: 5px;
+    border: 1px dotted #ccc;
+}
+.xrowGroupWorkflowULLI {
+    padding: 3px;
+    border-bottom: 1px solid #ccc;
+    margin: 3px 3px 30px;
+}
+.xrowGroupWorkflowULChildrenLink {
+    display: block;
+    float: left;
+    width: 250px;
+}
