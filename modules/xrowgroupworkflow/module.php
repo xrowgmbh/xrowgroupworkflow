@@ -1,6 +1,6 @@
 <?php
 
-$Module = array('name' => 'xrow Gruppen Workflow');
+$Module = array('name' => 'xrow Groupworkflow');
 
 $ViewList = array();
 $ViewList['view'] = array( 'script' => 'view.php',
