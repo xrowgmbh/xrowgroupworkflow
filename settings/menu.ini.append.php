@@ -8,8 +8,8 @@ Tabs[]=xrowgroupworkflow
 
 [Topmenu_xrowgroupworkflow]
 NavigationPartIdentifier=ezxgwnavigationpart
-Name=Gruppen Workflow
-Tooltip=Gruppen Workflow
+Name=Groupworkflow
+Tooltip=Groupworkflow
 URL[]
 URL[default]=xrowgroupworkflow/view
 Enabled[]
