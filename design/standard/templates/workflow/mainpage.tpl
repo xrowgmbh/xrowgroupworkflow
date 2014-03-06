@@ -29,9 +29,9 @@
         <div class="xrowGroupWorkflowStateBlock">
             <label for="xrowGroupWorkflowState">{'State'|i18n('design/standard/package')}</label>
             <select name="xrowGroupWorkflow[status]">
-                <option value="">{'Disabled'|i18n( 'design/admin/settings' )}</option>
-            {foreach $stategroup.states as $stateItem}
-                <option value="{$stateItem.id}"{if and(is_set($groupData), is_set($groupData.id)|not())}{if is_set($groupData.status)}{if $groupData.status|eq($stateItem.id)} selected="selected"{/if}{/if}{/if}>{$stateItem.translations.0.name}</option>
+                <option value="{$statedisabled}">{'Disabled'|i18n( 'design/admin/settings' )}</option>
+            {foreach $stategroup.states as $state}
+                <option value="{$state.id}"{if and(is_set($groupData), is_set($groupData.id)|not())}{if is_set($groupData.status)}{if $groupData.status|eq($stateItem.id)} selected="selected"{/if}{/if}{/if}>{$state.current_translation.name|wash}</option>
             {/foreach}
             </select>
         </div>
@@ -46,6 +46,7 @@
 <h3>{'Overview'|i18n('extension/xrowgroupworkflow')}</h3>
 <div id="xrowGroupWorkflowOverview">
     <ul id="xrowGroupWorkflowUL">
+    {def $counter = 1}
     {foreach $groups as $group}
         {def $selectedGroupData = $group
              $data = $selectedGroupData.data
@@ -75,7 +76,7 @@
             <input type="hidden" value="{$selectedGroupData.id}" name="xrowGroupWorkflow[id]" />
             <input type="hidden" value="{$selectedGroupData.id}" name="xrowGroupWorkflow[{$selectedGroupData.id}][id]" />
             <div class="xrowGroupWorkflowGroupName">
-                {'Groupname'|i18n('extension/xrowgroupworkflow')} <input type="text" id="xrowGroupWorkflowGroupName{$selectedGroupData.id}" name="xrowGroupWorkflow[{$selectedGroupData.id}][groupname]" value="{$data.groupname|wash()}" />
+                {$counter}. {'Groupname'|i18n('extension/xrowgroupworkflow')} <input type="text" id="xrowGroupWorkflowGroupName{$selectedGroupData.id}" name="xrowGroupWorkflow[{$selectedGroupData.id}][groupname]" value="{$data.groupname|wash()}" />
             </div>
             <div class="xrowGroupWorkflowDatePicker">
                 <label for="xrowGroupWorkflowDate">{'Date'|i18n('design/admin/shop/orderview')}</label>
@@ -94,11 +95,11 @@
             <div class="xrowGroupWorkflowStateBlock">
                 <label for="xrowGroupWorkflowState">{'State'|i18n('design/standard/package')}</label>
                 <select id="xrowGroupWorkflowState{$selectedGroupData.id}" name="xrowGroupWorkflow[{$selectedGroupData.id}][status]">
-                    <option value="">{'Disabled'|i18n('design/admin/settings')}</option>
-                {foreach $stategroup.states as $stateItem}
-                    <option value="{$stateItem.id}"{if $selectedGroupData.status|eq($stateItem.id)} selected="selected"{/if}>{$stateItem.translations.0.name}</option>
+                    <option value="{$statedisabled}"{if $selectedGroupData.status|eq($statedisabled)} selected="selected"{/if}>{'Disabled'|i18n('design/admin/settings')}</option>
+                {foreach $stategroup.states as $state}
+                    <option value="{$state.id}"{if $selectedGroupData.status|contains($state.id)} selected="selected"{/if}>{$state.current_translation.name|wash}</option>
                 {/foreach}
-                    <option value="100"{if $selectedGroupData.status|eq(100)} selected="selected"{/if}>{'Done'|i18n('design/admin/settings')}</option>
+                    <option value="{$statedone}"{if $selectedGroupData.status|eq($statedone)} selected="selected"{/if}>{'Done'|i18n('design/admin/settings')}</option>
                 </select>
             </div>
             <div class="xrowGroupWorkflowButtons">
@@ -144,6 +145,7 @@
             </form>
         </li>
         {undef $selectedGroupData $data $startminute $date}
+        {set $counter = $counter|inc()}
     {/foreach}
     </ul>
 </div>

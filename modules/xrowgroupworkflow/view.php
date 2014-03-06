@@ -8,6 +8,8 @@ $ini = eZINI::instance();
 
 $stategroup = eZContentObjectStateGroup::fetchByIdentifier(xrowGroupWorkflow::STATE_GROUP);
 $tpl->setVariable('stategroup', $stategroup);
+$tpl->setVariable('statedisabled', xrowGroupWorkflow::DISABLED);
+$tpl->setVariable('statedone', xrowGroupWorkflow::DONE);
 
 $dateLocaleExplodeSign = array('en' => array('sign' => '/', 'dateOrder' => array('m' => 0, 'd' => 1, 'Y' => 2)),
                                'de' => array('sign' => '.', 'dateOrder' => array('d' => 0, 'm' => 1, 'Y' => 2)));

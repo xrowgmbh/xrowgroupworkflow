@@ -5,8 +5,8 @@ class xrowGroupWorkflow extends eZPersistentObject
     const STATE_GROUP = 'groupworkflow';
     const ONLINE = 'online';
     const OFFLINE = 'offline';
-    const DONE = 100;
-    const DISABLED = 0;
+    const DONE = '0';
+    const DISABLED = '-1';
 
     function __construct( $row )
     {
@@ -46,6 +46,7 @@ class xrowGroupWorkflow extends eZPersistentObject
                 'id' 
             ) , 
             'sort' => array( 
+                'status' => 'desc',
                 'date' => 'desc' 
             ) , 
             'class_name' => 'xrowgroupworkflow',
@@ -68,67 +69,59 @@ class xrowGroupWorkflow extends eZPersistentObject
      *
      * @return array An array with operation status, always true
      */
-    static public function updateObjectState( $objectID, $selectedStateIDList )
+    static public function updateObjectState($object, $selectedStateIDList)
     {
-        $object = eZContentObject::fetch( $objectID );
-        // we don't need to re-assign states the object currently already has assigned
-        $currentStateIDArray = $object->attribute( 'state_id_array' );
-        $selectedStateIDList = array_diff( $selectedStateIDList, $currentStateIDArray );
-        foreach ( $selectedStateIDList as $selectedStateID )
+        if($object instanceof eZContentObject)
         {
-            $state = eZContentObjectState::fetchById( $selectedStateID );
-            $object->assignState( $state );
-        }
-        //call appropriate method from search engine
-        eZSearch::updateObjectState( $objectID, $selectedStateIDList );
-        eZContentCacheManager::clearContentCacheIfNeeded( $objectID );
-    }
-
-    function online()
-    {
-        $object = eZContentObject::fetch( $this->contentobject_id );
-        if ( $this->attribute( 'start' ) > 0 && $object->attribute( 'class_identifier' ) != 'event' )
-        {
-            $object->setAttribute( 'published', $this->attribute( 'start' ) );
-            $object->store();
-        }
-        self::updateObjectState( $this->contentobject_id, array( 
-            eZContentObjectState::fetchByIdentifier( xrowworkflow::ONLINE, eZContentObjectStateGroup::fetchByIdentifier( xrowworkflow::STATE_GROUP )->ID )->ID 
-        ) );
-        if( $this->attribute( 'end' ) !== NULL && $this->attribute( 'end' ) > 0 )
-        {
-            $this->setAttribute( 'start', 0 );
-            $this->store();
+            // we don't need to re-assign states the object currently already has assigned
+            $currentStateIDArray = $object->attribute( 'state_id_array' );
+            $selectedStateIDList = array_diff( $selectedStateIDList, $currentStateIDArray );
+            foreach ( $selectedStateIDList as $selectedStateID )
+            {
+                $state = eZContentObjectState::fetchById( $selectedStateID );
+                $object->assignState( $state );
+            }
+            //call appropriate method from search engine
+            eZSearch::updateObjectState($object->ID, $selectedStateIDList);
+            eZContentCacheManager::clearContentCacheIfNeeded($object->ID);
         }
         else
         {
-            $this->remove();
+            eZDebug::writeDebug(array($object), __METHOD__);
         }
-        eZContentCacheManager::clearContentCache( $this->contentobject_id );
-        eZDebug::writeDebug( __METHOD__ );
     }
 
-    function offline($contentobject_id)
+    function online($object, $onlineStateID)
     {
-        self::updateObjectState( $this->contentobject_id, array( 
-            eZContentObjectState::fetchByIdentifier( xrowgroupworkflow::OFFLINE, eZContentObjectStateGroup::fetchByIdentifier( xrowworkflow::STATE_GROUP )->ID )->ID 
-        ) );
-        $this->cleareZFlowBlocks();
-        $this->setAttribute('status', 100);
+        if ($this->attribute('date') > 0)
+        {
+            $object->setAttribute('published', $this->attribute('date'));
+            $object->store();
+        }
+        self::updateObjectState($object, array($onlineStateID));
+        eZContentCacheManager::clearContentCache($object->ID);
+        $this->setAttribute('status', xrowGroupWorkflow::DONE);
         $this->store();
-        eZDebug::writeDebug( __METHOD__ );
     }
 
-    function cleareZFlowBlocks()
+    function offline($object, $offlineStateID)
+    {
+        self::updateObjectState($object, array($offlineStateID));
+        $this->cleareZFlowBlocks();
+        $this->setAttribute('status', xrowGroupWorkflow::DONE);
+        $this->store();
+    }
+
+    function cleareZFlowBlocks($object)
     {
         $db = eZDB::instance();
         // Remove from the flow
-        if ($this->contentobject_id > 0)
+        if ($object->ID > 0)
         {
             $db->begin();
-            $db->query( 'DELETE FROM ezm_pool WHERE object_id = ' . (int) $this->contentobject_id );
+            $db->query( 'DELETE FROM ezm_pool WHERE object_id = ' . (int)$object->ID);
             $db->commit();
-            $rows = $db->arrayQuery( 'SELECT DISTINCT ezm_block.node_id FROM ezm_pool, ezm_block WHERE object_id = ' . (int) $this->contentobject_id . ' AND ezm_pool.block_id = ezm_block.id' );
+            /*$rows = $db->arrayQuery('SELECT DISTINCT ezm_block.node_id FROM ezm_pool, ezm_block WHERE object_id = ' . (int)$object->ID . ' AND ezm_pool.block_id = ezm_block.id');
             if (isset($rows) && count($rows))
             {
                 foreach ($rows as $row)
@@ -137,7 +130,7 @@ class xrowGroupWorkflow extends eZPersistentObject
                     if ($contentObject)
                         eZContentCacheManager::clearContentCache($contentObject->attribute('id'));
                 }
-            }
+            }*/
             eZContentCacheManager::clearContentCache($this->contentobject_id);
         }
     }

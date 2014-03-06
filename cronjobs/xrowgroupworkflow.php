@@ -4,8 +4,8 @@
 $user = eZUser::fetch( eZINI::instance()->variable( 'UserSettings', 'UserCreatorID' ) );
 $user->loginCurrent();
 
-$stategroup = eZContentObjectStateGroup::fetchByIdentifier(xrowGroupWorkflow::STATE_GROUP);
-die(var_dump($stategroup));
+$onlineStateID = eZContentObjectState::fetchByIdentifier(xrowGroupWorkflow::ONLINE, eZContentObjectStateGroup::fetchByIdentifier(xrowGroupWorkflow::STATE_GROUP)->ID)->ID;
+$offlineStateID = eZContentObjectState::fetchByIdentifier(xrowGroupWorkflow::OFFLINE, eZContentObjectStateGroup::fetchByIdentifier(xrowGroupWorkflow::STATE_GROUP)->ID)->ID;
 
 // get current groupworkflow
 $condArray = array('date' => array('<=', time()));
@@ -18,46 +18,37 @@ $rows = eZPersistentObject::fetchObjectList(xrowGroupWorkflow::definition(),
                                             false,
                                             null,
                                             null,
-                                            ' status != 0 AND status != 100');
-
-die(var_dump($rows));
+                                            ' AND status > 0 AND status < 100');
 
 if( is_array( $rows ) && count( $rows ) > 0 )
 {
-    foreach ( $rows as $row )
+    foreach ( $rows as $groupworkflow )
     {
-        $data = unserialize($row['data']);
-        $status = $row['status'];
+        $data = unserialize($groupworkflow->data);
+        $status = $groupworkflow->status;
         if(isset($data['children']) && count($data['children']) > 0)
         {
             foreach($data['children'] as $nodeID)
             {
                 $object = eZContentObject::fetchByNodeID($nodeID);
-                if( $node instanceof eZContentObjectTreeNode )
+                if($object instanceof eZContentObject)
                 {
                     switch ( $status )
                     {
-                        case $online_state->ID:
-                            $workflow->moveTo();
+                        case $onlineStateID:
+                            $groupworkflow->online($object, $onlineStateID);
                             if ( ! $isQuiet )
                             {
-                                $cli->output( "Move '" . $node->attribute( 'name' ) . "' (" . $node->NodeID . ")." );
+                                $cli->output( "Set online '" . $object->attribute( 'name' ) . "' (" . $object->ID . ")." );
                             }
                             break;
-                        case $offline_state->ID:
-                                $workflow->delete();
-                                if ( ! $isQuiet )
-                                {
-                                    $cli->output( "Delete '" . $node->attribute( 'name' ) . "' (" . $node->NodeID . ")." );
-                                }
-                                break;
-                            default:
-                                $workflow->offline();
-                                if ( ! $isQuiet )
-                                {
-                                    $cli->output( "Set offline '" . $node->attribute( 'name' ) . "' (" . $node->NodeID . ")." );
-                                }
-                                break;
+                        case $offlineStateID:
+                            $groupworkflow->offline($object, $offlineStateID);
+                            if ( ! $isQuiet )
+                            {
+                                $cli->output( "Set offline '" . $object->attribute( 'name' ) . "' (" . $object->ID . ")." );
+                            }
+                            break;
                         }
                     }
                 else
