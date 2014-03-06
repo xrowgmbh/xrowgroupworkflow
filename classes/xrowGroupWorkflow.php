@@ -46,8 +46,8 @@ class xrowGroupWorkflow extends eZPersistentObject
                 'id' 
             ) , 
             'sort' => array( 
-                'status' => 'desc',
-                'date' => 'desc' 
+                'date' => 'desc',
+                'status' => 'desc'
             ) , 
             'class_name' => 'xrowgroupworkflow',
             'name' => 'xrowgroupworkflow' 

@@ -46,7 +46,7 @@
 <h3>{'Overview'|i18n('extension/xrowgroupworkflow')}</h3>
 <div id="xrowGroupWorkflowOverview">
     <ul id="xrowGroupWorkflowUL">
-    {def $counter = 1}
+    {def $groupindex = 1}
     {foreach $groups as $group}
         {def $selectedGroupData = $group
              $data = $selectedGroupData.data
@@ -76,7 +76,7 @@
             <input type="hidden" value="{$selectedGroupData.id}" name="xrowGroupWorkflow[id]" />
             <input type="hidden" value="{$selectedGroupData.id}" name="xrowGroupWorkflow[{$selectedGroupData.id}][id]" />
             <div class="xrowGroupWorkflowGroupName">
-                {$counter}. {'Groupname'|i18n('extension/xrowgroupworkflow')} <input type="text" id="xrowGroupWorkflowGroupName{$selectedGroupData.id}" name="xrowGroupWorkflow[{$selectedGroupData.id}][groupname]" value="{$data.groupname|wash()}" />
+                {$groupindex}. {'Groupname'|i18n('extension/xrowgroupworkflow')} <input type="text" id="xrowGroupWorkflowGroupName{$selectedGroupData.id}" name="xrowGroupWorkflow[{$selectedGroupData.id}][groupname]" value="{$data.groupname|wash()}" />
             </div>
             <div class="xrowGroupWorkflowDatePicker">
                 <label for="xrowGroupWorkflowDate">{'Date'|i18n('design/admin/shop/orderview')}</label>
@@ -145,7 +145,7 @@
             </form>
         </li>
         {undef $selectedGroupData $data $startminute $date}
-        {set $counter = $counter|inc()}
+        {set $groupindex = $groupindex|sum(1)}
     {/foreach}
     </ul>
 </div>
