@@ -59,6 +59,10 @@ if(($http->hasPostVariable('xrowGroupWorkflowAddGroup') || $http->hasPostVariabl
                 $error = $return['error'];
                 $groupData = $groupDataTmp;
             }
+            else
+            {
+                $returnstatus = ezpI18n::tr('extension/xrowgroupworkflow', 'Added group "' . $groupData['groupname'] . '"' );
+            }
         }
     }
 }
@@ -151,6 +155,7 @@ if($http->hasPostVariable('xrowGroupWorkflowCopyGroup') && isset($namedParameter
         $groupData['groupname'] = 'Copy of ' . $groupData['groupname'];
         $copyGroupWorkflow->data = serialize($groupData);
         $copyGroupWorkflow->store();
+        $returnstatus = ezpI18n::tr('extension/xrowgroupworkflow', 'Copied group "' . $groupData['groupname'] . '"');
     }
 }
 // delete a group
@@ -162,6 +167,7 @@ if($http->hasPostVariable('xrowGroupWorkflowRemoveGroup') && isset($namedParamet
     {
         $xrowGroupWorkflowObject = new xrowGroupWorkflow(array('id' => $groupID));
         $xrowGroupWorkflowObject->remove();
+        $returnstatus = ezpI18n::tr('extension/xrowgroupworkflow', 'Removed group "' . $groupData['groupname'] . '"');
     }
 }
 // delete an object from group
@@ -178,6 +184,50 @@ if($http->hasPostVariable('xrowGroupWorkflowRemoveObject') && isset($namedParame
             unset($groupData['children'][$removeObject]);
         $groupWorkflow->data = serialize($groupData);
         $groupWorkflow->store();
+        $returnstatus = ezpI18n::tr('extension/xrowgroupworkflow', 'Removed object with node id ' . $removeObject . ' from group "' . $groupData['groupname'] . '"');
+    }
+}
+// set now group state without cronjob
+if($http->hasPostVariable('xrowGroupWorkflowSetStateGroup') && isset($namedParameters['GroupID']) && $namedParameters['GroupID'] > 0)
+{
+    $groupID = $namedParameters['GroupID'];
+    $setNowGroupStateButton = $http->postVariable('xrowGroupWorkflowSetStateGroup');
+    if (isset($setNowGroupStateButton[$groupID]))
+    {
+        $groupworkflow = xrowGroupWorkflow::fetchByID($groupID);
+        $groupworkflow->date = time();
+        if($groupworkflow instanceof xrowGroupWorkflow)
+        {
+            $data = unserialize($groupworkflow->data);
+            $status = $groupworkflow->status;
+            if(isset($data['children']) && count($data['children']) > 0)
+            {
+                foreach($data['children'] as $nodeID)
+                {
+                    $object = eZContentObject::fetchByNodeID($nodeID);
+                    if($object instanceof eZContentObject)
+                    {
+                        switch ($status)
+                        {
+                            case $onlineStateID:
+                                $groupworkflow->online($object, $onlineStateID);
+                                if(!returnstatus)
+                                    $returnstatus = ezpI18n::tr('extension/xrowgroupworkflow', 'Set group "' . $data['groupname'] . '" online.');
+                                break;
+                            case $offlineStateID:
+                                $groupworkflow->offline($object, $offlineStateID);
+                                if(!$returnstatus)
+                                    $returnstatus = ezpI18n::tr('extension/xrowgroupworkflow', 'Set group "' . $data['groupname'] . '" offline.');
+                                break;
+                            }
+                        }
+                    else
+                    {
+                        eZDebug::writeError(array($object, " is not instanceof eZContentObject"), __METHOD__);
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -194,6 +244,10 @@ foreach($listTmp as $listTmpItem)
     $rows[$listTmpItem->id] = $listTmpItem;
 }
 $tpl->setVariable('groups', $rows);
+if(isset($return))
+{
+    $tpl->setVariable('return', $return);
+}
 $Result = array();
 $Result['content'] = $tpl->fetch( 'design:workflow/mainpage.tpl' );
 

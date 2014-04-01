@@ -5,6 +5,11 @@
 {if is_set($error)}
     <div class="message-error">{$error}</div>
 {/if}
+{if is_set($return)}
+    <div class="message-feedback">
+        <h2>{$return}</h2>
+    </div>
+{/if}
 <div class="xrowGroupWorkflowNewGroup">
     <form method="post" action={'xrowgroupworkflow/view'|ezurl()}>
         <h3>{'Add new group'|i18n('extension/xrowgroupworkflow')}</h3>
@@ -104,6 +109,7 @@
             </div>
             <div class="xrowGroupWorkflowButtons">
                 <input type="submit" class="editFieldButtonCopy" name="xrowGroupWorkflowCopyGroup[{$selectedGroupData.id}]" value="{'Copy group'|i18n('extension/xrowgroupworkflow')}" />
+                <input type="submit" class="editFieldButtonCopy" name="xrowGroupWorkflowSetStateGroup[{$selectedGroupData.id}]" value="{'Set now group state'|i18n('extension/xrowgroupworkflow')}" />
                 <input type="submit" name="xrowGroupWorkflowRemoveGroup[{$selectedGroupData.id}]" value="{'Remove group'|i18n('extension/xrowgroupworkflow')}" />
             </div>
 

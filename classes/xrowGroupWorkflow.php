@@ -54,11 +54,11 @@ class xrowGroupWorkflow extends eZPersistentObject
         );
     }
 
-    static public function fetchByID( $ID )
+    static public function fetchByID($ID)
     {
-        return eZPersistentObject::fetchObject( xrowgroupworkflow::definition(), null, array( 
+        return eZPersistentObject::fetchObject(xrowgroupworkflow::definition(), null, array( 
             'id' => $ID 
-        ) );
+        ));
     }
 
     /**
