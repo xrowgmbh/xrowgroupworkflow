@@ -165,7 +165,8 @@ if($http->hasPostVariable('xrowGroupWorkflowRemoveGroup') && isset($namedParamet
     $removeGroupButton = $http->postVariable('xrowGroupWorkflowRemoveGroup');
     if (isset($removeGroupButton[$groupID]))
     {
-        $xrowGroupWorkflowObject = new xrowGroupWorkflow(array('id' => $groupID));
+        $xrowGroupWorkflowObject = xrowGroupWorkflow::fetchByID($groupID);
+        $groupData = unserialize($xrowGroupWorkflowObject->data);
         $xrowGroupWorkflowObject->remove();
         $returnstatus = ezpI18n::tr('extension/xrowgroupworkflow', 'Removed group "' . $groupData['groupname'] . '"');
     }
