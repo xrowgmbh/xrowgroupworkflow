@@ -5,9 +5,9 @@
 {if is_set($error)}
     <div class="message-error">{$error}</div>
 {/if}
-{if is_set($return)}
+{if is_set($returnstatus)}
     <div class="message-feedback">
-        <h2>{$return}</h2>
+        <h2>{$returnstatus}</h2>
     </div>
 {/if}
 <div class="xrowGroupWorkflowNewGroup">

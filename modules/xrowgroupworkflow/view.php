@@ -244,9 +244,9 @@ foreach($listTmp as $listTmpItem)
     $rows[$listTmpItem->id] = $listTmpItem;
 }
 $tpl->setVariable('groups', $rows);
-if(isset($return))
+if(isset($returnstatus))
 {
-    $tpl->setVariable('return', $return);
+    $tpl->setVariable('returnstatus', $returnstatus);
 }
 $Result = array();
 $Result['content'] = $tpl->fetch( 'design:workflow/mainpage.tpl' );
