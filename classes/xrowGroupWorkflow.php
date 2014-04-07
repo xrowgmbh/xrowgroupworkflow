@@ -83,7 +83,7 @@ class xrowGroupWorkflow extends eZPersistentObject
             }
             //call appropriate method from search engine
             eZSearch::updateObjectState($object->ID, $selectedStateIDList);
-            eZContentCacheManager::clearContentCacheIfNeeded($object->ID);
+            eZContentCacheManager::clearContentCache($object->ID);
         }
         else
         {
@@ -99,7 +99,6 @@ class xrowGroupWorkflow extends eZPersistentObject
             $object->store();
         }
         self::updateObjectState($object, array($onlineStateID));
-        eZContentCacheManager::clearContentCache($object->ID);
         $this->setAttribute('status', xrowGroupWorkflow::DONE);
         $this->store();
     }
@@ -121,16 +120,6 @@ class xrowGroupWorkflow extends eZPersistentObject
             $db->begin();
             $db->query( 'DELETE FROM ezm_pool WHERE object_id = ' . (int)$object->ID);
             $db->commit();
-            /*$rows = $db->arrayQuery('SELECT DISTINCT ezm_block.node_id FROM ezm_pool, ezm_block WHERE object_id = ' . (int)$object->ID . ' AND ezm_pool.block_id = ezm_block.id');
-            if (isset($rows) && count($rows))
-            {
-                foreach ($rows as $row)
-                {
-                    $contentObject = eZContentObject::fetchByNodeID($row['node_id']);
-                    if ($contentObject)
-                        eZContentCacheManager::clearContentCache($contentObject->attribute('id'));
-                }
-            }*/
             eZContentCacheManager::clearContentCache($this->contentobject_id);
         }
     }
