@@ -206,6 +206,8 @@ if($http->hasPostVariable('xrowGroupWorkflowSetStateGroup') && isset($namedParam
             $status = $groupworkflow->status;
             if(isset($data['children']) && count($data['children']) > 0)
             {
+                $onlineStateID = eZContentObjectState::fetchByIdentifier(xrowGroupWorkflow::ONLINE, eZContentObjectStateGroup::fetchByIdentifier(xrowGroupWorkflow::STATE_GROUP)->ID)->ID;
+                $offlineStateID = eZContentObjectState::fetchByIdentifier(xrowGroupWorkflow::OFFLINE, eZContentObjectStateGroup::fetchByIdentifier(xrowGroupWorkflow::STATE_GROUP)->ID)->ID;
                 foreach($data['children'] as $nodeID)
                 {
                     $object = eZContentObject::fetchByNodeID($nodeID);

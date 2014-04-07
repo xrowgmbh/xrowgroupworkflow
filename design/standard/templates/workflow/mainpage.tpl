@@ -86,12 +86,12 @@
             <div class="xrowGroupWorkflowDatePicker">
                 <label for="xrowGroupWorkflowDate">{'Date'|i18n('design/admin/shop/orderview')}</label>
                 <input data-time="{$date.date}" value="{$date.date}" type="text" class="xrowGroupWorkflowDate" id="xrowGroupWorkflowDate{$selectedGroupData.id}" name="xrowGroupWorkflow[{$selectedGroupData.id}][date]" data-locale="{$locale.http_locale_code|extract(0,2)}" />
-                <select id="xrowGroupWorkflowDateHour{$selectedGroupData.id}" name="xrowGroupWorkflow[{$selectedGroupData.id}][hour]">
+                <select id="xrowGroupWorkflowDateHour{$selectedGroupData.id}" name="xrowGroupWorkflow[{$selectedGroupData.id}][hour]" onChange="setButtonToSave('{$selectedGroupData.id}')">
                 {for 0 to 23 as $counter}
                     <option value="{$counter}"{if $date.hour|eq($counter)} selected="selected"{/if}>{if $counter|le(9)}0{/if}{$counter}</option>
                 {/for}
                 </select>:
-                <select id="xrowGroupWorkflowDateMinute{$selectedGroupData.id}" name="xrowGroupWorkflow[{$selectedGroupData.id}][minute]">
+                <select id="xrowGroupWorkflowDateMinute{$selectedGroupData.id}" name="xrowGroupWorkflow[{$selectedGroupData.id}][minute]" onChange="setButtonToSave('{$selectedGroupData.id}')">
                 {for 0 to 59 as $counter}
                     <option value="{$counter}"{if $date.minute|eq($counter)} selected="selected"{/if}>{if $counter|le(9)}0{/if}{$counter}</option>
                 {/for}
@@ -99,7 +99,7 @@
             </div>
             <div class="xrowGroupWorkflowStateBlock">
                 <label for="xrowGroupWorkflowState">{'State'|i18n('design/standard/package')}</label>
-                <select id="xrowGroupWorkflowState{$selectedGroupData.id}" name="xrowGroupWorkflow[{$selectedGroupData.id}][status]">
+                <select id="xrowGroupWorkflowState{$selectedGroupData.id}" name="xrowGroupWorkflow[{$selectedGroupData.id}][status]" onChange="setButtonToSave('{$selectedGroupData.id}')">
                     <option value="{$statedisabled}"{if $selectedGroupData.status|eq($statedisabled)} selected="selected"{/if}>{'Disabled'|i18n('design/admin/settings')}</option>
                 {foreach $stategroup.states as $state}
                     <option value="{$state.id}"{if $selectedGroupData.status|contains($state.id)} selected="selected"{/if}>{$state.current_translation.name|wash}</option>
@@ -146,7 +146,7 @@
             {/if}
             <div class="xrowGroupWorkflowBrowseButtonBlock">
                 <input class="button" type="submit" name="xrowGroupWorkflowBrowseButton[{$selectedGroupData.id}_browse_related_node]" value="{'Add objects'|i18n('extension/xrowgroupworkflow')}" />&nbsp;&nbsp;&nbsp;&nbsp;
-                <input class="{if is_set($selected_node_ids[$selectedGroupData.id])}defaultbutton{else}button{/if}" type="submit" name="xrowGroupWorkflowSave[{$selectedGroupData.id}]" value="{'Save this groupworkflow'|i18n('extension/xrowgroupworkflow')}" />
+                <input id="xrowGroupWorkflowSave{$selectedGroupData.id}" class="{if is_set($selected_node_ids[$selectedGroupData.id])}defaultbutton{else}button{/if}" type="submit" name="xrowGroupWorkflowSave[{$selectedGroupData.id}]" value="{'Save this groupworkflow'|i18n('extension/xrowgroupworkflow')}" />
             </div>
             </form>
         </li>
