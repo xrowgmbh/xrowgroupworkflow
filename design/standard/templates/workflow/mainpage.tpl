@@ -146,7 +146,7 @@
             {/if}
             <div class="xrowGroupWorkflowBrowseButtonBlock">
                 <input class="button" type="submit" name="xrowGroupWorkflowBrowseButton[{$selectedGroupData.id}_browse_related_node]" value="{'Add objects'|i18n('extension/xrowgroupworkflow')}" />&nbsp;&nbsp;&nbsp;&nbsp;
-                <input class="button" type="submit" name="xrowGroupWorkflowSave[{$selectedGroupData.id}]" value="{'Save this groupworkflow'|i18n('extension/xrowgroupworkflow')}" />
+                <input class="{if is_set($selected_node_ids[$selectedGroupData.id])}defaultbutton{else}button{/if}" type="submit" name="xrowGroupWorkflowSave[{$selectedGroupData.id}]" value="{'Save this groupworkflow'|i18n('extension/xrowgroupworkflow')}" />
             </div>
             </form>
         </li>

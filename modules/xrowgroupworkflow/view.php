@@ -61,7 +61,10 @@ if(($http->hasPostVariable('xrowGroupWorkflowAddGroup') || $http->hasPostVariabl
             }
             else
             {
-                $returnstatus = ezpI18n::tr('extension/xrowgroupworkflow', 'Added group "' . $groupData['groupname'] . '"' );
+                if(isset($groupData['id']))
+                    $returnstatus = ezpI18n::tr('extension/xrowgroupworkflow', 'Saved group "' . $groupData['groupname'] . '"' );
+                else
+                    $returnstatus = ezpI18n::tr('extension/xrowgroupworkflow', 'Added group "' . $groupData['groupname'] . '"' );
             }
         }
     }
