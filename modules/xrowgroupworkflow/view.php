@@ -196,15 +196,17 @@ if($http->hasPostVariable('xrowGroupWorkflowSetStateGroup') && isset($namedParam
 {
     $groupID = $namedParameters['GroupID'];
     $setNowGroupStateButton = $http->postVariable('xrowGroupWorkflowSetStateGroup');
-    if (isset($setNowGroupStateButton[$groupID]))
+    $groupworkflowPost = $http->postVariable('xrowGroupWorkflow');
+    if (isset($setNowGroupStateButton[$groupID]) && isset($groupworkflowPost[$groupID]))
     {
-        $groupworkflow = xrowGroupWorkflow::fetchByID($groupID);
-        $groupworkflow->date = time();
-        if($groupworkflow instanceof xrowGroupWorkflow)
+        $xrowGroupWorkflow = xrowGroupWorkflow::fetchByID($groupID);
+        $groupworkflow = $groupworkflowPost[$groupID];
+        if($xrowGroupWorkflow instanceof xrowGroupWorkflow)
         {
-            $data = unserialize($groupworkflow->data);
-            $status = $groupworkflow->status;
-            if(isset($data['children']) && count($data['children']) > 0)
+            $xrowGroupWorkflow->date = time();
+            $data = unserialize($xrowGroupWorkflow->data);
+            $status = $groupworkflow['status'];
+            if(isset($data['children']) && count($data['children']) > 0 && $status != xrowGroupWorkflow::DONE && $status != xrowGroupWorkflow::DISABLED)
             {
                 $onlineStateID = eZContentObjectState::fetchByIdentifier(xrowGroupWorkflow::ONLINE, eZContentObjectStateGroup::fetchByIdentifier(xrowGroupWorkflow::STATE_GROUP)->ID)->ID;
                 $offlineStateID = eZContentObjectState::fetchByIdentifier(xrowGroupWorkflow::OFFLINE, eZContentObjectStateGroup::fetchByIdentifier(xrowGroupWorkflow::STATE_GROUP)->ID)->ID;
@@ -216,12 +218,12 @@ if($http->hasPostVariable('xrowGroupWorkflowSetStateGroup') && isset($namedParam
                         switch ($status)
                         {
                             case $onlineStateID:
-                                $groupworkflow->online($object, $onlineStateID);
+                                $xrowGroupWorkflow->online($object, $onlineStateID);
                                 if(!returnstatus)
                                     $returnstatus = ezpI18n::tr('extension/xrowgroupworkflow', 'Set group "' . $data['groupname'] . '" online.');
                                 break;
                             case $offlineStateID:
-                                $groupworkflow->offline($object, $offlineStateID);
+                                $xrowGroupWorkflow->offline($object, $offlineStateID);
                                 if(!$returnstatus)
                                     $returnstatus = ezpI18n::tr('extension/xrowgroupworkflow', 'Set group "' . $data['groupname'] . '" offline.');
                                 break;
