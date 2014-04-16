@@ -219,13 +219,11 @@ if($http->hasPostVariable('xrowGroupWorkflowSetStateGroup') && isset($namedParam
                         {
                             case $onlineStateID:
                                 $xrowGroupWorkflow->online($object, $onlineStateID);
-                                if(!returnstatus)
-                                    $returnstatus = ezpI18n::tr('extension/xrowgroupworkflow', 'Set group "' . $data['groupname'] . '" online.');
+                                $returnstatus = ezpI18n::tr('extension/xrowgroupworkflow', 'Set group "' . $data['groupname'] . '" online.');
                                 break;
                             case $offlineStateID:
                                 $xrowGroupWorkflow->offline($object, $offlineStateID);
-                                if(!$returnstatus)
-                                    $returnstatus = ezpI18n::tr('extension/xrowgroupworkflow', 'Set group "' . $data['groupname'] . '" offline.');
+                                $returnstatus = ezpI18n::tr('extension/xrowgroupworkflow', 'Set group "' . $data['groupname'] . '" offline.');
                                 break;
                             }
                         }
