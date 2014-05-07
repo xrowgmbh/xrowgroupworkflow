@@ -243,13 +243,16 @@ if($errorIsSet !== false)
     $tpl->setVariable('error', $error);
 }
 $listTmp = eZPersistentObject::fetchObjectList(xrowGroupWorkflow::definition());
-foreach($listTmp as $listTmpItem)
+if(count($listTmp) > 0)
 {
-    $data = unserialize($listTmpItem->data);
-    $listTmpItem->data = $data;
-    $rows[$listTmpItem->id] = $listTmpItem;
+    foreach($listTmp as $listTmpItem)
+    {
+        $data = unserialize($listTmpItem->data);
+        $listTmpItem->data = $data;
+        $rows[$listTmpItem->id] = $listTmpItem;
+    }
+    $tpl->setVariable('groups', $rows);
 }
-$tpl->setVariable('groups', $rows);
 if(isset($returnstatus))
 {
     $tpl->setVariable('returnstatus', $returnstatus);
