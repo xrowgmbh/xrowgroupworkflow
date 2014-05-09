@@ -132,7 +132,7 @@
                 {if is_set($selectedChildren)}{def $group_selected_node_ids = $selectedChildren}{/if}
                 {if is_set($selected_node_ids[$selectedGroupData.id])}{def $group_selected_node_ids = $selected_node_ids[$selectedGroupData.id]}{/if}
                 {foreach $group_selected_node_ids as $selected_node_id}
-                    {if $selectedGroupData.data.children|contains($selected_node_id)|not()}
+                    {if or(and(is_set($selectedGroupData.data.children), $selectedGroupData.data.children|contains($selected_node_id)|not()), is_set($selectedGroupData.data.children)|not())}
                     {def $child = fetch('content', 'node', hash('node_id', $selected_node_id))}
                     <li style="overflow: hidden; height: 20px">
                         <input type="hidden" name="xrowGroupWorkflow[{$selectedGroupData.id}][children][{$child.node_id}]" value="{$child.node_id}" />
