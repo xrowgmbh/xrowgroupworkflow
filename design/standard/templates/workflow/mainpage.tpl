@@ -134,7 +134,7 @@
                 {foreach $group_selected_node_ids as $selected_node_id}
                     {if or(and(is_set($selectedGroupData.data.children), $selectedGroupData.data.children|contains($selected_node_id)|not()), is_set($selectedGroupData.data.children)|not())}
                     {def $child = fetch('content', 'node', hash('node_id', $selected_node_id))}
-                    <li style="overflow: hidden; height: 20px">
+                    <li style="overflow: hidden; height: 23px">
                         <input type="hidden" name="xrowGroupWorkflow[{$selectedGroupData.id}][children][{$child.node_id}]" value="{$child.node_id}" />
                         <a href={$child.url_alias|ezurl()} class="xrowGroupWorkflowULChildrenLink">{$child.name|wash()}</a> <input type="submit" name="xrowGroupWorkflowRemoveObject[{$selectedGroupData.id}][{$child.node_id}]" value="{'Remove object'|i18n('extension/xrowgroupworkflow')}" />
                     </li>
