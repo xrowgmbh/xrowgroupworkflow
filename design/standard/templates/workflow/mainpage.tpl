@@ -136,7 +136,7 @@
                     {def $child = fetch('content', 'node', hash('node_id', $selected_node_id))}
                     <li style="overflow: hidden; height: 20px">
                         <input type="hidden" name="xrowGroupWorkflow[{$selectedGroupData.id}][children][{$child.node_id}]" value="{$child.node_id}" />
-                        <a href={$child.url_alias|ezurl()} class="xrowGroupWorkflowULChildrenLink">{$child.name|wash()}</a>{* <input type="submit" name="xrowGroupWorkflowRemoveObject[{$selectedGroupData.id}][{$child.node_id}]" value="{'Remove object'|i18n('extension/xrowgroupworkflow')}" />*}
+                        <a href={$child.url_alias|ezurl()} class="xrowGroupWorkflowULChildrenLink">{$child.name|wash()}</a> <input type="submit" name="xrowGroupWorkflowRemoveObject[{$selectedGroupData.id}][{$child.node_id}]" value="{'Remove object'|i18n('extension/xrowgroupworkflow')}" />
                     </li>
                     {undef $child}
                     {/if}
