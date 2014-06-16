@@ -36,7 +36,7 @@
             <select name="xrowGroupWorkflow[status]">
                 <option value="{$statedisabled}">{'Disabled'|i18n( 'design/admin/settings' )}</option>
             {foreach $stategroup.states as $state}
-                <option value="{$state.id}"{if and(is_set($groupData), is_set($groupData.id)|not())}{if is_set($groupData.status)}{if $groupData.status|eq($stateItem.id)} selected="selected"{/if}{/if}{/if}>{$state.current_translation.name|wash}</option>
+                <option value="{$state.id}"{if and(is_set($groupData), is_set($groupData.id)|not(), is_set($groupData.status), $groupData.status|eq($state.id))} selected="selected"{/if}>{$state.current_translation.name|wash}</option>
             {/foreach}
             </select>
         </div>
