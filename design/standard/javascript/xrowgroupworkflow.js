@@ -25,23 +25,25 @@ jQuery(document).ready(function() {
     });
 
     var datePickerClassName = 'xrowGroupWorkflowDate',
-        datePickerLocale = $('.'+datePickerClassName).data('locale');
+    datePickerLocale = $('.'+datePickerClassName).data('locale');
     $.datepicker.setDefaults(datePickerLocale);
     $('.'+datePickerClassName).each(function(){
-        $(this).mouseout(function(){
-            var i = ($(this).attr('id') + '').indexOf(datePickerClassName, 0);
-            if(i >= 0) {
-                var charscount = datePickerClassName.length,
-                    id = $(this).attr('id').substr(charscount);
-                setButtonToSave(id);
-            }
-        });
+        var oldValue = $(this).val();
+        var i = ($(this).attr('id') + '').indexOf(datePickerClassName, 0);
+        if(i >= 0) {
+            var charscount = datePickerClassName.length,
+                id = $(this).attr('id').substr(charscount);
+        }
         $(this).datepicker({
-            minDate: 0, 
-            changeMonth: true, 
-            changeYear: true, 
+            onClose: function (dateText, inst) {
+                if(oldValue != dateText && typeof id != 'undefined')
+                    setButtonToSave(id);
+            },
+            minDate: 0,
+            changeMonth: true,
+            changeYear: true,
             showWeek: true});
-    })
+    });
 });
 
 var setButtonToSave = function(id) {

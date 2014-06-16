@@ -70,10 +70,16 @@
                                        'hour', $postGroupData.hour,
                                        'minute', $postGroupData.minute )}
                 {/if}
+                {def $groupStatus = $postGroupData.status}
             {/if}
         {else}
             {if is_set($selectedChildren)}{undef $selectedChildren}{/if}
             {if is_set($selectedGroupname)}{undef $selectedGroupname}{/if}
+            {if is_set($selectedGroupData)}
+                {if is_set($selectedGroupData.status)}
+                    {def $groupStatus = $selectedGroupData.status}
+                {/if}
+            {/if}
         {/if}
         <li class="xrowGroupWorkflowULLI">
         <form method="post" action={concat('xrowgroupworkflow/view/', $selectedGroupData.id)|ezurl()}>
@@ -100,11 +106,11 @@
             <div class="xrowGroupWorkflowStateBlock">
                 <label for="xrowGroupWorkflowState">{'State'|i18n('design/standard/package')}</label>
                 <select id="xrowGroupWorkflowState{$selectedGroupData.id}" name="xrowGroupWorkflow[{$selectedGroupData.id}][status]" onChange="setButtonToSave('{$selectedGroupData.id}')">
-                    <option value="{$statedisabled}"{if $selectedGroupData.status|eq($statedisabled)} selected="selected"{/if}>{'Disabled'|i18n('design/admin/settings')}</option>
+                    <option value="{$statedisabled}"{if and(is_set($groupStatus), $groupStatus|eq($statedisabled))} selected="selected"{/if}>{'Disabled'|i18n('design/admin/settings')}</option>
                 {foreach $stategroup.states as $state}
-                    <option value="{$state.id}"{if $selectedGroupData.status|contains($state.id)} selected="selected"{/if}>{$state.current_translation.name|wash}</option>
+                    <option value="{$state.id}"{if and(is_set($groupStatus), $groupStatus|eq($state.id))} selected="selected"{/if}>{$state.current_translation.name|wash}</option>
                 {/foreach}
-                    <option value="{$statedone}"{if $selectedGroupData.status|eq($statedone)} selected="selected"{/if}>{'Done'|i18n('design/admin/settings')}</option>
+                    <option value="{$statedone}"{if and(is_set($groupStatus), $groupStatus|eq($statedone))} selected="selected"{/if}>{'Done'|i18n('design/admin/settings')}</option>
                 </select>
             </div>
             <div class="xrowGroupWorkflowButtons">
