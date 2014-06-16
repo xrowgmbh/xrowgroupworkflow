@@ -87,7 +87,7 @@
             <input type="hidden" value="{$selectedGroupData.id}" name="xrowGroupWorkflow[id]" />
             <input type="hidden" value="{$selectedGroupData.id}" name="xrowGroupWorkflow[{$selectedGroupData.id}][id]" />
             <div class="xrowGroupWorkflowGroupName">
-                {$groupindex}. {'Groupname'|i18n('extension/xrowgroupworkflow')} <input type="text" id="xrowGroupWorkflowGroupName{$selectedGroupData.id}" name="xrowGroupWorkflow[{$selectedGroupData.id}][groupname]" value="{$data.groupname|wash()}" />
+                {$groupindex}. {'Groupname'|i18n('extension/xrowgroupworkflow')} <input type="text" id="xrowGroupWorkflowGroupName{$selectedGroupData.id}" name="xrowGroupWorkflow[{$selectedGroupData.id}][groupname]" value="{if is_set($selectedGroupname)}{$selectedGroupname|wash()}{else}{$data.groupname|wash()}{/if}" />
             </div>
             <div class="xrowGroupWorkflowDatePicker">
                 <label for="xrowGroupWorkflowDate">{'Date'|i18n('design/admin/shop/orderview')}</label>
